@@ -1,10 +1,18 @@
 package org.example.teamshortner.service;
 
 import java.util.HashMap;
+import org.springframework.beans.factory.annotation.Value;
+
 import java.util.Map;
 import java.util.UUID;
 
 public class LinkService {
+
+    @Value("${short-url.base-url}")
+    private String baseUrl;
+
+    @Value("${short-url.length}")
+    private String length;
 
     private Map<String, String> context;
 
@@ -18,7 +26,7 @@ public class LinkService {
      * @return the shortened URL
      */
     public String shortenUrl(String originalUrl) {
-        String shortUrl = UUID.randomUUID().toString().substring(0, 8);
+        String shortUrl = baseUrl + UUID.randomUUID().toString().substring(0, Integer.parseInt(length));
         context.put(shortUrl, originalUrl);
         return shortUrl;
     }
