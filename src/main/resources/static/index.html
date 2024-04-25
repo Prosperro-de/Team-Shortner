@@ -5,6 +5,39 @@
     <title>Title</title>
 </head>
 <body>
+    <div class="container">
+        <h2>URL Shortener</h2>
+        <form id="urlForm">
+            <input type="text" id="originalURL" placeholder="Enter URL to shorten" required>
+            <br>
+            <input type="submit" value="Shorten URL" onclick="shortenURL()">
+        </form>
+        <div id="shortenedURL"></div>
+    </div>
 
+    <script>
+        function shortenURL() {
+            let originalUrl = document.getElementById("originalURL").value
+            fetch("/add_link", {
+                method: POST,
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({url: originalUrl})
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById("shortenedURL").innerHTML = "Shortened URL: <a href='" + data.shortURL + "' target='_blank'>" + data.shortURL + "</a>";
+                    } else {
+                        document.getElementById("shortenedURL").innerHTML = "Error: " + data.message;
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    document.getElementById("shortenedURL").innerHTML = "Error: Failed to shorten URL.";
+                });
+        }
+    </script>
 </body>
 </html>
